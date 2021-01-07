@@ -6,7 +6,7 @@ target 'VGSCollectSDK' do
   use_frameworks!
 
   target 'FrameworkTests' do
-#    inherit! :search_paths
+#    inherit! :search_pathss
   end
 end
 
