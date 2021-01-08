@@ -79,7 +79,7 @@ extension VGSCollect {
           content.append("custom_header")
         }
         // check if file is exist
-        guard let key = storage.files.keys.first, let value = storage.files.values.first else {
+        guard let value = storage.files.values.first else {
             let error = VGSError(type: .inputFileNotFound,
                                  userInfo: VGSErrorInfo(key: VGSSDKErrorFileNotFound,
                                                         description: "File not selected or doesn't exists",
@@ -121,12 +121,13 @@ extension VGSCollect {
           block(.failure(error.code, nil, nil, error))
             return
         }
-        // make body
-        let body = mapStringKVOToDictionary(key: key, value: encodedData, separator: ".")
         VGSAnalyticsClient.shared.trackFormEvent(self.formAnalyticsDetails, type: .beforeSubmit, status: .success, extraData: [ "statusCode": 200, "content": content])
       
+        //Format the data
+        let formattedBody: String = "data:image/jpeg;base64," + encodedData
+        
         // send request
-        apiClient.sendRequest(path: path, method: method, value: body) { [weak self](response ) in
+        apiClient.sendRequestBC(path: path, method: method, value: formattedBody) { [weak self](response ) in
             
             // Analytics
             if let strongSelf = self {
